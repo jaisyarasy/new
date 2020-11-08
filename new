@@ -1,0 +1,104 @@
+import random
+
+class stat:
+    def __init__(self, name, hp, dmg, deff):
+        self.name = name
+        self.hp = hp
+        self.dmg = dmg
+        self.deff = deff
+
+def help():
+    print("Commands\n-[\"my_stat\"]\n-[\"enemy_stat\"]\n-[\"kill_count\"]\n-[\"hit\"]\n-[\"heal\"]\n")
+
+def check_my_stat():
+    print(f"{player.name}'s stat:\n[HP\t\t\t: {player.hp}]\n[Damage\t\t: {player.dmg}]\n[Defense\t: {player.deff}]\n")
+
+def check_enemy_stat():
+    print(f"{enemy.name}'s stat:\n[HP\t\t\t: {enemy.hp}]\n[Damage\t\t: {enemy.dmg}]\n[Defense\t: {enemy.deff}]\n")
+
+def check_kill_count():
+    # dynamic
+    print(f"You've killed:\n[{kill_count[0]}\tSlimes\t\t]\n[{kill_count[1]}\tOgres\t\t]\n[{kill_count[2]}\tWitches\t\t]\n[{kill_count[3]}\tMud Globs\t]\n[{sum(kill_count)}\ttotal\t\t]\n")
+
+def player_hit():
+    # dynamic
+    global enemy1, enemy2, enemy3, enemy4
+    if player.hp > 0:
+        enemy.hp -= (player.dmg - enemy.deff)
+        if enemy.hp > 0:
+            print(f"You hit {enemy.name} for {player.dmg - enemy.deff} dmg. {enemy.name}'s HP is now at {enemy.hp}\n")
+        else:
+            print(f"You hit {enemy.name} for {player.dmg - enemy.deff} dmg. {enemy.name} is dead.\n")
+            # dynamic
+            enemy1 = stat("Slime", 5, 1, 0)
+            enemy2 = stat("Ogre", 10, 2, 0)
+            enemy3 = stat("Witch", 10, 4, 0)
+            enemy4 = stat("Mud Glob", 10, 2, 1)
+            # dynamic
+            if enemy.name == enemy1.name:
+                kill_count[0] += 1
+            elif enemy.name == enemy2.name:
+                kill_count[1] += 1
+            elif enemy.name == enemy3.name:
+                kill_count[2] += 1
+            elif enemy.name == enemy4.name:
+                kill_count[3] += 1
+    else:
+        print(f"You have 0 HP. You can only heal.\n")
+
+def enemy_hit():
+    if enemy.hp > 0 and player.hp > 0:
+        player.hp -= (enemy.dmg - player.deff)
+        if player.hp > 0:
+            print(f"{enemy.name} hit you for {enemy.dmg - player.deff} dmg. Your HP is now at {player.hp}\n")
+        else:
+            player.hp = 0
+            print(f"{enemy.name} hit you for {enemy.dmg - player.deff} dmg. Your HP is now at {player.hp}\n")
+    elif enemy.hp > 0 and player.hp <= 0:
+        print(f"{enemy.name} feels too pity to hit you.\\n")
+
+def heal():
+    player.hp += 5
+    if player.hp > 20:
+        player.hp = 20
+    print(f"You healed for 5 HP. Your HP is now at {player.hp}\n")
+
+game = True
+
+name = input("Player's name : ")
+player = stat(name, 20, 2, 0)
+# dynamic
+kill_count = [0, 0 ,0 ,0]
+
+#dynamic
+enemy1 = stat("Slime", 5, 1, 0)
+enemy2 = stat("Ogre", 10, 2, 0)
+enemy3 = stat("Witch", 10, 4, 0)
+enemy4 = stat("Mud Glob", 10, 2, 1)
+
+while game == True:
+    # dynamic
+    enemy = random.choice([enemy1, enemy2, enemy3, enemy4])
+    print(f"{name} was traveling when suddenly he met a {enemy.name}\n")
+    while enemy.hp > 0:
+        inp = input("Do : ")
+        if inp == "help":
+            help()
+        elif inp == "my_stat":
+            check_my_stat()
+        elif inp == "enemy_stat":
+            check_enemy_stat()
+        elif inp == "kill_count":
+            check_kill_count()
+        elif inp == "hit":
+            player_hit()
+            enemy_hit()
+        elif inp == "heal":
+            heal()
+            enemy_hit()
+        elif inp == "exit":
+            enemy.hp = 0
+            game = False
+        else:
+            print("Invalid input.")
+
